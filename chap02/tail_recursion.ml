@@ -1,35 +1,35 @@
 
 (** factorial **)
 (* original version *)
-let rec fact n =
-  if n = 0 then 1
-  else n * fact (n-1)
+let rec factorial = function
+  | 0 -> 1
+  | n -> factorial (n-1)
 
 let _ = print_endline "using fact ..."
-let _ = Printf.printf "%d! = %d\n" 10 (fact 10)
+let _ = Printf.printf "%d! = %d\n" 10 (factorial 10)
 
 (* tail recursion version *)
-let fact_tr n =
-  let rec fact_aux n acc =
-    if n = 0 then acc
-    else fact_aux (n-1) (acc * n)
+let factorial_tr n =
+  let rec factorial_aux acc = function
+    | 0 -> acc
+    | n -> factorial_aux (acc * n) (n-1)
   in
-  fact_aux n 1
+  factorial_aux 1 n
 
 let _ = print_endline "using fact_tr ..."
-let _ = Printf.printf "%d! = %d\n" 20 (fact_tr 20)
+let _ = Printf.printf "%d! = %d\n" 20 (factorial_tr 20)
 
 (* tail recusion version using zarith *)
 
-let zfact_tr n =
-  let rec zfact_aux n acc =
+let zfactorial_tr n =
+  let rec zfactorial_aux n acc =
     if Z.equal n Z.zero then acc
-    else zfact_aux (Z.pred n) (Z.mul acc n)
+    else zfactorial_aux (Z.pred n) (Z.mul acc n)
   in
-  zfact_aux n Z.one
+  zfactorial_aux n Z.one
 
 let _ = print_endline "using zfact_tr ..."
-let _ = Printf.printf "%d! = %s\n\n" 100 (Z.to_string @@ zfact_tr @@ Z.of_int 100)
+let _ = Printf.printf "%d! = %s\n\n" 100 (Z.to_string @@ zfactorial_tr @@ Z.of_int 100)
 
 
 (** power **)
@@ -66,22 +66,22 @@ let _ = Printf.printf "%d^%d = %s\n\n" 2 1000 (Z.to_string Z.(zpow_tr ~$2 ~$1000
 
 (** fibonacci **)
 (* original version *)
-let rec fib n =
-  if n = 0 then 0
-  else if n = 1 then 1
-  else fib (n-1) + fib (n-2)
+let rec fib = function
+  | 0 -> 0
+  | 1 -> 1
+  | n -> fib (n-1) + fib (n-2)
 
 let _ = print_endline "using fib ..."
 let _ = Printf.printf "Fib(%d) = %d\n" 30 (fib 30)
 
 (* tail recursion version *)
 let fib_tr n =
-  let rec fib_aux n x y =
-    if n = 0 then x
-    else if n = 1 then y
-    else fib_aux (n-1) y (x+y)
+  let rec fib_aux x y = function
+    | 0 -> x
+    | 1 -> y
+    | n -> fib_aux y (x+y) (n-1)
   in
-  fib_aux n 0 1
+  fib_aux 0 1 n
 
 let _ = print_endline "using fib_tr ..."
 let _ = Printf.printf "Fib(%d) = %d\n" 90 (fib_tr 90)

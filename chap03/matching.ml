@@ -14,6 +14,7 @@ let rec length = function
   | [] -> 0
   | _ :: t -> succ (length t)
 
+(* same with `List.length` *)
 let rec length_tr lst =
   let rec length_aux acc = function
     | [] -> 0
@@ -22,7 +23,7 @@ let rec length_tr lst =
   length_aux 0 lst
 
 
-(* same with `lst1 @ lst2` *)
+(* similar with `List.append` a.k.a. `lst1 @ lst2` *)
 let rec append lst1 lst2 =
   match lst1 with
   | [] -> lst2
