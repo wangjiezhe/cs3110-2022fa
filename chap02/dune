@@ -1,0 +1,8 @@
+(executable
+ (name hello_world)
+ (modules hello_world))
+
+(executable
+ (name tail_recursion)
+ (modules tail_recursion)
+ (libraries zarith))
