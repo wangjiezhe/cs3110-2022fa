@@ -1,0 +1,8 @@
+if-then-else=keyword-first
+type-decl=sparse
+let-module=sparse
+let-and=sparse
+module-item-spacing=sparse
+break-fun-decl=fit-or-vertical
+break-fun-sig=fit-or-vertical
+break-cases=fit-or-vertical

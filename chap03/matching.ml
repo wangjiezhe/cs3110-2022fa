@@ -9,7 +9,6 @@ let sum_tr lst =
   in
   sum_aux 0 lst
 
-
 let rec length = function
   | [] -> 0
   | _ :: t -> succ (length t)
@@ -21,7 +20,6 @@ let length_tr lst =
     | _ :: t -> length_aux (succ acc) t
   in
   length_aux 0 lst
-
 
 (* similar with `List.append` a.k.a. `lst1 @ lst2` *)
 let rec append lst1 lst2 =
@@ -37,23 +35,21 @@ let rec append lst1 lst2 =
    documentation of the List module. *)
 let append_tr lst1 lst2 =
   let rec append_aux lst1 lst2 acc =
-    match lst1, acc with
+    match (lst1, acc) with
     | [], [] -> lst2
     | [], h :: t -> append_aux [] (h :: lst2) t
     | h :: t, acc -> append_aux t lst2 (h :: acc)
   in
   append_aux lst1 lst2 []
 
-
-let rec from i j lst =
-  if i > j then lst
-  else from i (j-1) (j :: lst)
+let rec from i j lst = if i > j then lst else from i (j - 1) (j :: lst)
 
 let ( -- ) i j = from i j []
 
 let long_list = 0 -- 1_000_000
 
-
 let fst3 (x, _, _) = x
+
 let snd3 (_, y, _) = y
+
 let thrd3 (_, _, z) = z
