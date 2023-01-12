@@ -24,3 +24,28 @@ opam install -y zarith
 ```
 
 Finally, we can launch `utop` now!
+
+
+## Learning Ocaml
+
+```mermaid
+graph LR
+A(Ocaml language)
+B1(Syntax)
+B2(Sematics)
+C21(Dynamic sematics)
+C22(Static sematics)
+D21(Evaluation rules)
+D22(Type-checking rules)
+D23(Patern-matching rules)
+D31(Exhaustiveness of patterns)
+D32(Unused branches)
+B3(Idioms)
+B4(Libraries)
+B5(Tools)
+A --> B1 & B2 & B3 & B4 & B5
+B2 --> C21 & C22
+C21 --> D21
+C22 --> D22 & D23
+D23 --> D31 & D32
+```

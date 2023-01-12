@@ -1,2 +1,12 @@
+(library
+ (name matching)
+ (modules matching))
+
+(library
+ (name variant)
+ (modules variant))
+
 (executable
- (name matching))
+ (name test)
+ (modules test)
+ (libraries ounit2 matching))
