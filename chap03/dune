@@ -6,6 +6,10 @@
  (name variant)
  (modules variant))
 
+(library
+ (name mylist)
+ (modules mylist))
+
 (executable
  (name test)
  (modules test)

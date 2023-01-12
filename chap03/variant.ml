@@ -51,3 +51,15 @@ let center = function
 type string_or_int =
   | String of string
   | Int of int
+
+(* Polymorphic Variants *)
+let f = function
+  | 0 -> `Infinity
+  | 1 -> `Finite 1
+  | n -> `Finite (-n)
+
+let _ =
+  match f 3 with
+  | `NegInfinity -> "negative infinity"
+  | `Finite _ -> "finite"
+  | `Infinity -> "infinite"
