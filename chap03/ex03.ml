@@ -391,13 +391,13 @@ let is_bst tr =
   | Fail -> false
 
 (* Exercise: quadrant poly [★★] *)
-let sign = function
+let sign_poly = function
   | x when x = 0 -> `Zero
   | x when x > 0 -> `Pos
   | _ -> `Neg
 
-let quadrant (x, y) =
-  match (sign x, sign y) with
+let quadrant_poly (x, y) =
+  match (sign_poly x, sign_poly y) with
   | `Pos, `Pos -> Some `I
   | `Neg, `Pos -> Some `II
   | `Neg, `Neg -> Some `III

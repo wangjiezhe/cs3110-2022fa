@@ -6,3 +6,4 @@ module-item-spacing=sparse
 break-fun-decl=fit-or-vertical
 break-fun-sig=fit-or-vertical
 break-cases=fit-or-vertical
+exp-grouping=preserve

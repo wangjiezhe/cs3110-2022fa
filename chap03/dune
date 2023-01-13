@@ -18,7 +18,7 @@
  (name natural_number)
  (modules natural_number))
 
-(executable
+(test
  (name test)
  (modules test)
  (libraries ounit2 matching))

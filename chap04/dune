@@ -1,0 +1,13 @@
+(library
+ (name higher_order)
+ (modules higher_order))
+
+(library
+ (name ex04)
+ (modules ex04)
+ (libraries ounit2 tree))
+
+(test
+ (name test_ex04)
+ (modules test_ex04)
+ (libraries ounit2 ex04))
