@@ -10,7 +10,20 @@
  (name mylist)
  (modules mylist))
 
+(library
+ (name tree)
+ (modules tree))
+
+(library
+ (name natural_number)
+ (modules natural_number))
+
 (executable
  (name test)
  (modules test)
  (libraries ounit2 matching))
+
+(library
+ (name ex03)
+ (modules ex03)
+ (libraries ounit2 tree))
