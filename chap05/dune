@@ -1,0 +1,28 @@
+(library
+ (name myStack)
+ (modules myStack))
+
+(library
+ (name myQueue)
+ (modules myQueue))
+
+(library
+ (name myMap)
+ (modules myMap))
+
+(library
+ (name mySet)
+ (modules mySet))
+
+(library
+ (name algebra)
+ (modules algebra))
+
+(library
+ (name useStdlibMap)
+ (modules useStdlibMap))
+
+(test
+ (name test_myStack)
+ (modules test_myStack)
+ (libraries ounit2 myStack))

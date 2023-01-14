@@ -1,6 +1,6 @@
 (library
- (name higher_order)
- (modules higher_order))
+ (name higherOrder)
+ (modules higherOrder))
 
 (library
  (name ex04)

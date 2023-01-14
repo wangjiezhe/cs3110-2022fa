@@ -7,16 +7,16 @@
  (modules variant))
 
 (library
- (name mylist)
- (modules mylist))
+ (name myList)
+ (modules myList))
 
 (library
  (name tree)
  (modules tree))
 
 (library
- (name natural_number)
- (modules natural_number))
+ (name naturalNumber)
+ (modules naturalNumber))
 
 (test
  (name test)
