@@ -47,9 +47,9 @@ module type Field = sig
 
   val to_string : t -> string
 
-  val ( / ) : t -> t -> t
-
   val of_int : int -> t
+
+  val ( / ) : t -> t -> t
 end
 
 module IntRing : Ring
