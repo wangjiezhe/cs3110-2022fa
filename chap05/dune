@@ -26,3 +26,12 @@
  (name test_myStack)
  (modules test_myStack)
  (libraries ounit2 myStack))
+
+(library
+ (name ex05)
+ (modules ex05)
+ (libraries myQueue myMap))
+
+(library
+ (name date)
+ (modules date))
