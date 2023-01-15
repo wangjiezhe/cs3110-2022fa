@@ -8,6 +8,6 @@
  (libraries ounit2 tree))
 
 (test
- (name test_ex04)
- (modules test_ex04)
+ (name testEx04)
+ (modules testEx04)
  (libraries ounit2 ex04))

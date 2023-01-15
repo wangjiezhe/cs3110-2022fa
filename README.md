@@ -49,3 +49,59 @@ C21 --> D21
 C22 --> D22 & D23
 D23 --> D31 & D32
 ```
+
+### Primitive types
+
+- `int` : integers
+- `float` : floating-point numbers
+- `bool` : booleans, `true` and `false`
+- `char` : characters
+- `string` : strings
+- `unit` : unit, `()`
+- `exn` : exceptions
+- ...
+
+### Data types
+
+- list: `[e1; ...; en] ` has type `'a list`
+- tuple: `(e1, ..., en)` has type `'t1 * ... * 'tn`
+- record: `{f1=e1; ...; fn=en}` has type `{f1:t1; ...; fn:tn}`
+- variant: `C1 | ... | Cn` has type `t` (defined)
+- option: `None | Some e` has type `'a option`
+
+### Expressions
+
+- let expression
+  - `let ... in ...`
+  - `let ...`
+- if expressions
+  - `if ... then ... else ...`
+- assert expression
+  - `assert ...`
+- pattern matching
+  - ```match e with p1 -> v1 | ... | pn -> vn```
+
+### Functions
+
+- anonymous function
+  - `fun x1 ... xn -> e` has type `t1 -> ... -> tn -> te`
+- common function
+  - `let f = fun x1 ... xn -> e` same as `let f x1 ... xn = e`
+- recursive function
+  - `let rec f ...`
+- function application
+  - `f x1 ... xn`
+  - `f x` same as  `f @@ ` same as  `x |> f`
+  - `x op y` same as `( op ) x y` (e.g. + - * / )
+- pattern matching
+  - `let f ... x = match x with p1 -> v1 | ... | pn -> vn` same as `let f ... = functionn p1 -> v1 | ... | pn -> vn`
+
+the latters are just syntax sugars.
+
+### Higher-Order functions
+
+- map
+- filter
+- fold
+- pipeline
+- curring

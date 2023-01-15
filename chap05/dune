@@ -23,8 +23,8 @@
  (modules useStdlibMap))
 
 (test
- (name test_myStack)
- (modules test_myStack)
+ (name testMyStack)
+ (modules testMyStack)
  (libraries ounit2 myStack))
 
 (library
