@@ -4,19 +4,12 @@ module type Stack = sig
   exception Empty
 
   val empty : 'a t
-
   val is_empty : 'a t -> bool
-
   val push : 'a -> 'a t -> 'a t
-
   val peek : 'a t -> 'a
-
   val pop : 'a t -> 'a t
-
   val size : 'a t -> int
-
   val to_list : 'a t -> 'a list
-
   val pp : (Format.formatter -> 'a -> unit) -> Format.formatter -> 'a t -> unit
 end
 
@@ -42,7 +35,6 @@ module ListStack : Stack = struct
     | _ :: s -> s
 
   let size = List.length
-
   let to_list = Fun.id
 
   let pp pp_val fmt s =
@@ -120,6 +112,5 @@ module CustomStack : Stack = struct
     | S (Some { top = _; rest; size = _ }) -> rest
 
   let to_list _ = []
-
   let pp _ _ _ = ()
 end

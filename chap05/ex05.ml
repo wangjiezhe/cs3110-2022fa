@@ -3,7 +3,6 @@ module type ComplexSig = sig
   type t = float * float
 
   val zero : t
-
   val add : t -> t -> t
 end
 
@@ -12,7 +11,6 @@ module Complex : ComplexSig = struct
   type t = float * float
 
   let zero = (0., 0.)
-
   let add (r1, i1) (r2, i2) = (r1 +. r2, i1 +. i2)
 end
 
@@ -53,10 +51,8 @@ module BstMap : Map = struct
   let rec insert k v = function
     | Leaf -> Node ((k, v), Leaf, Leaf)
     | Node ((ko, vo), l, r) ->
-        if k = ko
-        then Node ((k, v), l, r)
-        else if k < ko
-        then Node ((ko, vo), insert k v l, r)
+        if k = ko then Node ((k, v), l, r)
+        else if k < ko then Node ((ko, vo), insert k v l, r)
         else Node ((ko, vo), l, insert k v r)
 
   let rec lookup k = function
@@ -74,19 +70,14 @@ module type Fraction = sig
   (* A fraction is a rational number p/q, where q != 0.*)
   type t
 
-  val make : int -> int -> t
   (** [make n d] is n/d. Requires d != 0. *)
+  val make : int -> int -> t
 
   val numerator : t -> int
-
   val denominator : t -> int
-
   val to_string : t -> string
-
   val to_float : t -> float
-
   val add : t -> t -> t
-
   val mul : t -> t -> t
 end
 
@@ -94,24 +85,18 @@ module Fraction : Fraction = struct
   type t = int * int
 
   let make p q = if q = 0 then failwith "Not_a_Fraction" else (p, q)
-
   let numerator (p, _) = p
-
   let denominator (_, q) = q
-
   let to_string (p, q) = string_of_int p ^ "/" ^ string_of_int q
-
   let to_float (p, q) = float_of_int p /. float_of_int q
-
   let add (p1, q1) (p2, q2) = ((p1 * q2) + (p2 * q1), q1 * q2)
-
   let mul (p1, q1) (p2, q2) = (p1 * p2, q1 * q2)
 end
 
 (* Exercise: fraction reduced [★★★] *)
 
-(** [gcd x y] is the greatest common divisor of [x] and [y].
-    Requires: [x] and [y] are positive. *)
+(** [gcd x y] is the greatest common divisor of [x] and [y]. Requires: [x] and
+    [y] are positive. *)
 let rec gcd x y =
   if x = 0 then y else if x < y then gcd (y - x) x else gcd y (x - y)
 
@@ -119,24 +104,17 @@ module FractionReduced : Fraction = struct
   type t = int * int
 
   let rec make p q =
-    if q = 0
-    then failwith "Not_a_Fraction"
-    else if q > 0
-    then
+    if q = 0 then failwith "Not_a_Fraction"
+    else if q > 0 then
       let d = gcd p q in
       (p / d, q / d)
     else make (-p) (-q)
 
   let numerator (p, _) = p
-
   let denominator (_, q) = q
-
   let to_string (p, q) = string_of_int p ^ "/" ^ string_of_int q
-
   let to_float (p, q) = float_of_int p /. float_of_int q
-
   let add (p1, q1) (p2, q2) = make ((p1 * q2) + (p2 * q1)) (q1 * q2)
-
   let mul (p1, q1) (p2, q2) = make (p1 * p2) (q1 * q2)
 end
 
@@ -162,18 +140,14 @@ let cm1 =
   |> add 'v' "Victor"
 
 let _ = CharMap.find 'E' cm1
-
 let cm2 = CharMap.remove 'A' cm1
-
 let _ = CharMap.mem 'A' cm2
-
 let _ = CharMap.bindings cm2
 
 (* Exercise: bindings [★★] *)
 (* all three return the same asscociation list *)
 (* - : (char * int) list = [('x', 0); ('y', 1)] *)
 let _ = CharMap.(empty |> add 'x' 0 |> add 'y' 1 |> bindings)
-
 let _ = CharMap.(empty |> add 'y' 1 |> add 'x' 0 |> bindings)
 
 let _ =
@@ -218,7 +192,6 @@ let print_calendar2 (ca : calendar) =
 
 (* Exercise: is for [★★★] *)
 let is_for cm = CharMap.mapi (fun k v -> String.make 1 k ^ " is for " ^ v) cm
-
 let is_for2 cm = CharMap.mapi (fun k v -> Printf.sprintf "%c is for %s" k v) cm
 
 (* Exercise: first after [★★★] *)

@@ -17,9 +17,7 @@ let int_of_day = function
   | Sun -> 7
 
 type point = float * float
-
 type vector = float list
-
 type matrix = float list list
 
 type shape =

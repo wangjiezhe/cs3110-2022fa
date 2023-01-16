@@ -7,10 +7,12 @@ type 'a mylist =
           list_max [] is None *)
 let rec list_max = function
   | [] -> None
-  | h :: t -> (
-      match list_max t with
-      | None -> Some h
-      | Some x -> Some (max x h))
+  | h :: t ->
+      begin
+        match list_max t with
+        | None -> Some h
+        | Some x -> Some (max x h)
+      end
 
 let list_hd = function
   | [] -> None

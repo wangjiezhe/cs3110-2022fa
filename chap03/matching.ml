@@ -43,13 +43,8 @@ let append_tr lst1 lst2 =
   append_aux lst1 lst2 []
 
 let rec from i j lst = if i > j then lst else from i (j - 1) (j :: lst)
-
 let ( -- ) i j = from i j []
-
 let long_list = 0 -- 1_000_000
-
 let fst3 (x, _, _) = x
-
 let snd3 (_, y, _) = y
-
 let thrd3 (_, _, z) = z

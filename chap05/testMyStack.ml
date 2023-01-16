@@ -30,5 +30,4 @@ let all_tests =
   stacks |> map tests |> flatten
 
 let test_stacks = "test stack modules" >::: all_tests
-
 let _ = run_test_tt_main test_stacks

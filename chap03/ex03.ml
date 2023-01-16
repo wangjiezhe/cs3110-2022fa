@@ -1,8 +1,6 @@
 (* Exercise: list expressions [★] *)
 let _ = [ 1; 2; 3; 4; 5 ]
-
 let _ = [ 1; 2; 3; 4; 5 ]
-
 let _ = [ 1 ] @ [ 2; 3; 4 ] @ [ 5 ]
 
 (* Exercise: product [★★] *)
@@ -44,7 +42,6 @@ let patterns_third = function
 
 (* Exercise: library [★★★] *)
 let fifth lst = try List.nth lst 4 with Failure _ -> 0
-
 let sort_rev lst = List.rev (List.sort compare lst)
 
 (* Exercise: library test [★★★] *)
@@ -61,7 +58,6 @@ let _ = run_test_tt_main test_sort_rev
 
 (* Exercise: library puzzle [★★★] *)
 let last lst = List.hd (List.rev lst)
-
 let any_zeroes lst = List.mem 0 lst
 
 (* Exercise: take drop [★★★] *)
@@ -85,17 +81,13 @@ let take_tr n lst =
   take_aux [] n (take_aux [] n lst)
 
 let rec from i j lst = if i > j then lst else from i (j - 1) (j :: lst)
-
 let ( -- ) i j = from i j []
-
 let test_take n = take n (1 -- n)
-
 let test_take_tr n = take_tr n (1 -- n)
 
 let rec test_stack_take test_func m n =
   let rec test_stack_take_aux min max =
-    if max - min > 1
-    then
+    if max - min > 1 then
       let avg = (min + max) / 2 in
       match test_func avg with
       | _ -> test_stack_take_aux avg max
@@ -158,9 +150,7 @@ type student = {
 }
 
 let holly = { first_name = "Holly"; last_name = "Wang"; gpa = 3.8 }
-
 let student_name stu = (stu.first_name, stu.last_name)
-
 let new_student first_name last_name gpa = { first_name; last_name; gpa }
 
 (* Exercise: pokerecord [★★] *)
@@ -176,7 +166,6 @@ type pokemon = {
 }
 
 let charizard = { name = "charizard"; hp = 78; ptype = Fire }
-
 let squirtle = { name = "squirtle"; hp = 44; ptype = Water }
 
 (* Exercise: safe hd and tl [★★] *)
@@ -226,13 +215,14 @@ let is_before (date1 : date) (date2 : date) =
 let rec earliest = function
   | [] -> None
   | [ date ] -> Some date
-  | date1 :: date2 :: other -> (
-      match (is_valid_date date1, is_valid_date date2) with
-      | true, true ->
-          if is_before date1 date2
-          then earliest (date1 :: other)
-          else earliest (date2 :: other)
-      | _ -> failwith "invalid date")
+  | date1 :: date2 :: other ->
+      begin
+        match (is_valid_date date1, is_valid_date date2) with
+        | true, true ->
+            if is_before date1 date2 then earliest (date1 :: other)
+            else earliest (date2 :: other)
+        | _ -> failwith "invalid date"
+      end
 
 (* Exercise: assoc list [★] *)
 (* [insert k v lst] is an association list that binds key [k] to value [v]
@@ -246,7 +236,6 @@ let rec lookup k = function
   | (k', v) :: t -> if k = k' then Some v else lookup k t
 
 let assoc_lst = insert 1 "one" (insert 2 "two" (insert 3 "three" []))
-
 let res_lookup_two = lookup 2 assoc_lst
 (* Some "two" *)
 
@@ -273,11 +262,8 @@ type card = {
 }
 
 let ace_of_clubs = { suit = Clubs; rank = Ace }
-
 let queen_of_hearts = { suit = Hearts; rank = Queeen }
-
 let two_of_diamonds = { suit = Diamonds; rank = Rint 2 }
-
 let seven_of_spades = { suit = Spades; rank = Rint 7 }
 
 (* Exercise: matching [★] *)
@@ -374,16 +360,19 @@ type result_of_min_max =
 
 let rec min_max = function
   | Leaf -> Empty
-  | Node { value; left; right } -> (
-      match (min_max left, min_max right) with
-      | Empty, Empty -> Result (value, value)
-      | Result (min_l, max_l), Result (min_r, max_r) ->
-          if max_l < value && value < min_r then Result (min_l, max_r) else Fail
-      | Empty, Result (min_r, max_r) ->
-          if value < min_r then Result (value, max_r) else Fail
-      | Result (min_l, max_l), Empty ->
-          if max_l < value then Result (min_l, value) else Fail
-      | _ -> Fail)
+  | Node { value; left; right } ->
+      begin
+        match (min_max left, min_max right) with
+        | Empty, Empty -> Result (value, value)
+        | Result (min_l, max_l), Result (min_r, max_r) ->
+            if max_l < value && value < min_r then Result (min_l, max_r)
+            else Fail
+        | Empty, Result (min_r, max_r) ->
+            if value < min_r then Result (value, max_r) else Fail
+        | Result (min_l, max_l), Empty ->
+            if max_l < value then Result (min_l, value) else Fail
+        | _ -> Fail
+      end
 
 let is_bst tr =
   match min_max tr with

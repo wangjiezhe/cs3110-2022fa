@@ -1,12 +1,8 @@
 (* Exercise: twice, no arguments [★] *)
 let double x = 2 * x
-
 let square x = x * x
-
 let twice f x = f (f x)
-
 let quad = twice double
-
 let fourth = twice square
 
 (* Exercise: mystery operator 1 [★★] *)
@@ -24,12 +20,10 @@ let rec repeat f n x =
 
 (* Exercise: product [★] *)
 let product_left lst = List.fold_left (fun x y -> x *. y) 1. lst
-
 let product_right lst = List.fold_right (fun x y -> x *. y) lst 1.
 
 (* Exercise: terse product [★★] *)
 let product_left' = List.fold_left ( *. ) 1.
-
 let product_right' lst = List.fold_right ( *. ) lst 1.
 
 (* Exercise: sum_cube_odd [★★] *)
@@ -48,7 +42,6 @@ let rec exists_rec p = function
   | h :: t -> p h || exists_rec p t
 
 let exists_fold p = List.fold_left (fun bl it -> bl || p it) false
-
 let exists_lib = List.exists
 
 (* Exercise: account balance [★★★] *)
@@ -64,11 +57,8 @@ let rec account_balance_rec debits balance =
 
 (* Exercise: library uncurried [★★] *)
 let uncurried_nth (lst, n) = List.nth lst n
-
 let uncurried_append (lst1, lst2) = List.append lst1 lst2
-
 let uncurried_compare (x, y) = Char.compare x y
-
 let uncurried_max (x, y) = Stdlib.max x y
 
 (* Exercise: map composition [★★★] *)
@@ -76,7 +66,6 @@ let map_composition f g lst = List.map (fun x -> f @@ g @@ x) lst
 
 (* Exercise: more list fun [★★★] *)
 let longer_than_three = List.filter (fun x -> String.length x > 3)
-
 let all_add_one = List.map (fun x -> x +. 1.0)
 
 let concat strs sep =
@@ -143,11 +132,12 @@ let dot_product vec1 vec2 = List.map2 ( * ) vec1 vec2 |> List.fold_left ( + ) 0
 
 let rec split_first_column = function
   | [] | [] :: _ -> None
-  | (h :: k) :: t -> begin
-      match split_first_column t with
-      | None -> Some ([ h ], [ k ])
-      | Some (fc, ot) -> Some (h :: fc, k :: ot)
-    end
+  | (h :: k) :: t ->
+      begin
+        match split_first_column t with
+        | None -> Some ([ h ], [ k ])
+        | Some (fc, ot) -> Some (h :: fc, k :: ot)
+      end
 
 let rec transpose mat =
   match split_first_column mat with
@@ -160,8 +150,8 @@ let rec multiply_matrices_aux mat1 mat2 =
   | h :: t -> List.map (dot_product h) mat2 :: multiply_matrices_aux t mat2
 
 let multiply_matrices mat1 mat2 =
-  if is_valid_matrix3 mat1 && is_valid_matrix3 mat2
-  then multiply_matrices_aux mat1 (transpose mat2)
+  if is_valid_matrix3 mat1 && is_valid_matrix3 mat2 then
+    multiply_matrices_aux mat1 (transpose mat2)
   else raise (Invalid_argument "muplity_matrices")
 
 let dot_product2 = List.fold_left2 (fun acc x y -> acc + (x * y)) 0

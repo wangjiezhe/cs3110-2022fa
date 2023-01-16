@@ -5,7 +5,6 @@ let rec factorial = function
   | n -> factorial (n - 1)
 
 let _ = print_endline "using fact ..."
-
 let _ = Printf.printf "%d! = %d\n" 10 (factorial 10)
 
 (* tail recursion version *)
@@ -17,7 +16,6 @@ let factorial_tr n =
   factorial_aux 1 n
 
 let _ = print_endline "using fact_tr ..."
-
 let _ = Printf.printf "%d! = %d\n" 20 (factorial_tr 20)
 
 (* tail recusion version using zarith *)
@@ -35,9 +33,7 @@ let _ =
 (* power *)
 (* original version *)
 let rec pow x y = if y = 0 then 1 else x * pow x (y - 1)
-
 let _ = print_endline "using pow ..."
-
 let _ = Printf.printf "%d^%d = %d\n" 2 32 (pow 2 32)
 
 (* tail recursion version *)
@@ -48,7 +44,6 @@ let pow_tr x y =
   pow_aux x y 1
 
 let _ = print_endline "using pow_tr ..."
-
 let _ = Printf.printf "%d^%d = %d\n" 2 61 (pow_tr 2 61)
 
 (* tail recusion version using zarith *)
@@ -71,7 +66,6 @@ let rec fib = function
   | n -> fib (n - 1) + fib (n - 2)
 
 let _ = print_endline "using fib ..."
-
 let _ = Printf.printf "Fib(%d) = %d\n" 30 (fib 30)
 
 (* tail recursion version *)
@@ -84,20 +78,16 @@ let fib_tr n =
   fib_aux 0 1 n
 
 let _ = print_endline "using fib_tr ..."
-
 let _ = Printf.printf "Fib(%d) = %d\n" 90 (fib_tr 90)
 
 (* tail recusion version using zarith *)
 let zfib_tr n =
   let rec zfib_aux n x y =
-    if Z.equal n Z.zero
-    then x
-    else if Z.equal n Z.one
-    then y
+    if Z.equal n Z.zero then x
+    else if Z.equal n Z.one then y
     else zfib_aux (Z.pred n) y (Z.add x y)
   in
   zfib_aux n Z.zero Z.one
 
 let _ = print_endline "using zfib_tr ..."
-
 let _ = Printf.printf "Fib(%d) = %s\n" 1000 (Z.to_string Z.(zfib_tr ~$1000))

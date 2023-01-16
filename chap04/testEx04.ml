@@ -43,9 +43,7 @@ let test_is_valid_matrix3 =
        ]
 
 let _ = run_test_tt_main test_is_valid_matrix
-
 let _ = run_test_tt_main test_is_valid_matrix2
-
 let _ = run_test_tt_main test_is_valid_matrix3
 
 let test_add_row_vectors =

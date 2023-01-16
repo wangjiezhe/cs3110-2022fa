@@ -1,8 +1,6 @@
 (* apply *)
 let apply f x = f x
-
 let pipeline x f = f x
-
 let ( |> ) = pipeline
 
 (* compose *)
@@ -30,7 +28,6 @@ let rec rev_map_aux f acc = function
   | h :: t -> rev_map_aux f (f h :: acc) t
 
 let rev_map f = rev_map_aux f []
-
 let map'' f = compose List.rev (rev_map f)
 
 (* filter *)
@@ -39,11 +36,8 @@ let rec filter p = function
   | h :: t -> if p h then h :: filter p t else filter p t
 
 let even x = x mod 2 = 0
-
 let odd x = x mod 2 = 1
-
 let evens = filter even
-
 let odds = filter odd
 
 let rec filter_aux p acc = function
@@ -81,9 +75,7 @@ let rec filter_tree p = function
       if p v then Node (v, filter_tree p l, filter_tree p r) else Leaf
 
 let size_tree t = fold_tree (fun _ l r -> 1 + l + r) 0 t
-
 let depth_tree t = fold_tree (fun _ l r -> 1 + max l r) 0 t
-
 let preorder_tree t = fold_tree (fun v l r -> [ v ] @ l @ r) [] t
 
 (* pipeline *)
@@ -92,14 +84,10 @@ let sum_sq n =
   loop 0 0
 
 let rec ( -- ) i j = if i > j then [] else i :: (i + 1 -- j)
-
 let square x = x * x
-
 let sum = List.fold_left ( + ) 0
-
 let sum_eq' n = 0 -- n |> List.map square |> sum
 
 (* currying *)
 let curry f x y = f (x y)
-
 let uncurry f (x, y) = f x y
