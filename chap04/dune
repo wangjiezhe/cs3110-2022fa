@@ -5,9 +5,11 @@
 (library
  (name ex04)
  (modules ex04)
- (libraries ounit2 tree))
+ (libraries ounit2 tree)
+ (instrumentation
+  (backend bisect_ppx)))
 
 (test
- (name testEx04)
- (modules testEx04)
+ (name test_ex04)
+ (modules test_ex04)
  (libraries ounit2 ex04))

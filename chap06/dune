@@ -1,0 +1,14 @@
+; (library
+;  (name mySet2)
+;  (modules mySet2))
+
+(library
+ (name sorts)
+ (modules sorts)
+ (instrumentation
+  (backend bisect_ppx)))
+
+(test
+ (name test_sorts)
+ (modules test_sorts)
+ (libraries ounit2 sorts))

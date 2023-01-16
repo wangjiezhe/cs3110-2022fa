@@ -1,6 +1,8 @@
 (library
  (name myStack)
- (modules myStack))
+ (modules myStack)
+ (instrumentation
+  (backend bisect_ppx)))
 
 (library
  (name myQueue)
@@ -23,8 +25,8 @@
  (modules useStdlibMap))
 
 (test
- (name testMyStack)
- (modules testMyStack)
+ (name test_myStack)
+ (modules test_myStack)
  (libraries ounit2 myStack))
 
 (library

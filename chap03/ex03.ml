@@ -14,18 +14,7 @@ let rec concat = function
   | h :: t -> h ^ concat t
 
 (* Exercise: product test [★★] *)
-open OUnit2
-
-let test_product =
-  "test unit for product"
-  >::: [
-         ("empty" >:: fun _ -> assert_equal 1 (product []));
-         ("singleton" >:: fun _ -> assert_equal 2 (product [ 2 ]));
-         ( "five elements" >:: fun _ ->
-           assert_equal 120 (product [ 1; 2; 3; 4; 5 ]) );
-       ]
-
-let _ = run_test_tt_main test_product
+(* see test_ex03.ml *)
 
 (* Exercise: patterns [★★★] *)
 let patterns_fist = function
@@ -45,16 +34,7 @@ let fifth lst = try List.nth lst 4 with Failure _ -> 0
 let sort_rev lst = List.rev (List.sort compare lst)
 
 (* Exercise: library test [★★★] *)
-let test_sort_rev =
-  "test unit for sort_rev"
-  >::: [
-         ("empty" >:: fun _ -> assert_equal [] (sort_rev []));
-         ("singleton" >:: fun _ -> assert_equal [ 2 ] (sort_rev [ 2 ]));
-         ( "five elements" >:: fun _ ->
-           assert_equal [ 5; 4; 3; 2; 1 ] (sort_rev [ 3; 4; 1; 5; 2 ]) );
-       ]
-
-let _ = run_test_tt_main test_sort_rev
+(* see test_ex03.ml *)
 
 (* Exercise: library puzzle [★★★] *)
 let last lst = List.hd (List.rev lst)
@@ -342,15 +322,7 @@ let rec list_max_string : int list -> string = function
   | m :: n :: tl -> list_max_string (max m n :: tl)
 
 (* Exercise: list max exn ounit [★] *)
-let test_list_max =
-  "test list_max"
-  >::: [
-         ( "empty" >:: fun _ ->
-           assert_raises (Failure "list_max") (fun () -> list_max []) );
-         ("not empty" >:: fun _ -> assert_equal 4 (list_max [ 1; 2; 4; 3 ]));
-       ]
-
-let _ = run_test_tt_main test_list_max
+(* see test_ex03.ml *)
 
 (* Exercise: is_bst [★★★★] *)
 type result_of_min_max =

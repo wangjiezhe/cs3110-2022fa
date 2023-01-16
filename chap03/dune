@@ -1,6 +1,8 @@
 (library
  (name matching)
- (modules matching))
+ (modules matching)
+ (instrumentation
+  (backend bisect_ppx)))
 
 (library
  (name variant)
@@ -19,11 +21,18 @@
  (modules naturalNumber))
 
 (test
- (name test)
- (modules test)
+ (name test_matching)
+ (modules test_matching)
  (libraries ounit2 matching))
 
 (library
  (name ex03)
  (modules ex03)
- (libraries ounit2 tree))
+ (libraries tree)
+ (instrumentation
+  (backend bisect_ppx)))
+
+(test
+ (name test_ex03)
+ (modules test_ex03)
+ (libraries ounit2 ex03))
