@@ -12,3 +12,8 @@
  (name test_sorts)
  (modules test_sorts)
  (libraries ounit2 sorts))
+
+(test
+ (name qcheck_sorts)
+ (modules qcheck_sorts)
+ (libraries ounit2 qcheck sorts))
