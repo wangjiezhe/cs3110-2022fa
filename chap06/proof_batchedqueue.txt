@@ -1,0 +1,206 @@
+module type Queue = sig
+  type 'a t
+  val empty : 'a t
+  val is_empty : 'a t -> bool
+  val front : 'a t -> 'a
+  val enq : 'a -> 'a t -> 'a t
+  val deq : 'a t -> 'a t
+end
+
+module BatchedQueue = struct
+  (* AF: [(o, i)] represents the queue [o @ (List.rev i)].
+     RI: if [o] is empty then [i] is empty. *)
+  type 'a t = 'a list * 'a list
+
+  let empty = ([], [])
+
+  let is_empty (o, i) = if o = [] then true else false
+
+  let enq x (o, i) = if o = [] then ([x], []) else (o, x :: i)
+
+  let front (o, _) = List.hd o
+
+  let deq (o, i) =
+    match List.tl o with
+    | [] -> (List.rev i, [])
+    | t -> (t, i)
+end
+
+
+
+Algebraic specifications:
+
+1. is_empty empty = true
+2. is_empty (enq x q) = false
+3. front (enq x q)
+    = x          if q is empty
+    = front q    if q is not empty
+4. deq (enq x q)
+    = empty           if q is empty
+    = enq x (deq q)   if q is not empty
+
+
+
+Proof:
+
+    Lemma:  if is_empty q = true, then q = empty.
+    Proof:  Since is_empty q = true, it must be that q = (f, b) and f = [].
+    By the RI, it must also be that b = [].  Thus q = ([], []) = empty.
+    QED
+
+Proof for 1:
+  is_empty empty
+=   { eval empty }
+  is_empty ([], [])
+=   { eval is_empty }
+  [] = []
+=   { eval = }
+  true
+
+Proof for 2:
+  is_empty (enq x q) = false
+=   { eval enq }
+  is_empty (if f = [] then [x], [] else f, x :: b)
+
+case analysis: f = []
+
+  is_empty (if f = [] then [x], [] else f, x :: b)
+=   { eval if, f = [] }
+  is_empty ([x], [])
+=   { eval is_empty }
+  [x] = []
+=   { eval = }
+  false
+
+case analysis: f = h :: t
+
+  is_empty (if f = [] then [x], [] else f, x :: b)
+=   { eval if, f = h :: t }
+  is_empty (h :: t, x :: b)
+=   { eval is_empty }
+  h :: t = []
+=   { eval = }
+  false
+
+Proof for 3a:
+  front (enq x q) = x
+=   { emptiness lemma }
+  front (enq x ([], []))
+=   { eval enq }
+  front ([x], [])
+=   { eval front }
+  x
+
+Proof for 3b:
+  front (enq x q)
+=   { rewrite q as (h :: t, b), because q is not empty }
+  front (enq x (h :: t, b))
+=   { eval enq }
+  front (h :: t, x :: b)
+=   { eval front }
+  h
+
+  front q
+=   { rewrite q as (h :: t, b), because q is not empty }
+  front (h :: t, b)
+=   { eval front }
+  h
+
+Proof for 4a:
+  deq (enq x q)
+=   { emptiness lemma }
+  deq (enq x ([], []))
+=   { eval enq }
+  deq ([x], [])
+=   { eval deq }
+  List.rev [], []
+=   { eval rev }
+  [], []
+=   { eval empty }
+  empty
+
+Proof for 4b:
+Show: deq (enq x q) = enq x (deq q)  assuming is_empty q = false.
+Proof: Since is_empty q = false, q must be (h :: t, b).
+
+Case analysis:  t = [], b = []
+
+  deq (enq x q)
+=   { rewriting q as ([h], []) }
+  deq (enq x ([h], []))
+=   { eval enq }
+  deq ([h], [x])
+=   { eval deq }
+  List.rev [x], []
+=   { eval rev }
+  [x], []
+
+  enq x (deq q)
+=   { rewriting q as ([h], []) }
+  enq x (deq ([h], []))
+=   { eval deq }
+  enq x (List.rev [], [])
+=   { eval rev }
+  enq x ([], [])
+=   { eval enq }
+  [x], []
+
+Case analysis:  t = [], b = h' :: t'
+
+  deq (enq x q)
+=   { rewriting q as ([h], h' :: t') }
+  deq (enq x ([h], h' :: t'))
+=   { eval enq }
+  deq ([h], x :: h' :: t')
+=   { eval deq }
+  (List.rev (x :: h' :: t'), [])
+
+  enq x (deq q)
+=   { rewriting q as ([h], h' :: t') }
+  enq x (deq ([h], h' :: t'))
+=   { eval deq }
+  enq x (List.rev (h' :: t'), [])
+=   { eval enq }
+  (List.rev (h' :: t'), [x])
+
+// e = e'   if  AF(e) = AF(e')
+
+  AF((List.rev (h' :: t'), [x]))
+=   { apply AF } 
+  List.rev (h' :: t') @ List.rev [x]
+=   { rev distributes over @, an exercise in the previous lecture }
+  List.rev ([x] @ (h' :: t'))
+=   { eval @ }
+  List.rev (x :: h' :: t')
+  
+  AF((List.rev (x :: h' :: t'), []))
+=   { apply AF }
+  List.rev (x :: h' :: t') @ List.rev []
+=   { eval rev }
+  List.rev (x :: h' :: t') @ []
+=   { eval @ }
+  List.rev (x :: h' :: t')
+
+  (List.rev (h' :: t'), [x])
+=   { AF equation }
+  (List.rev (x :: h' :: t'), [])
+
+Case analysis:  t = h' :: t'
+
+  deq (enq x q)
+=   { rewriting q as (h :: h' :: t', b) }
+  deq (enq x (h :: h' :: t', b))
+=   { eval enq }
+  deq (h :: h' :: t, x :: b)
+=   { eval deq }
+  h' :: t, x :: b
+
+  enq x (deq q)
+=   { rewriting q as (h :: h' :: t', b) }
+  enq x (deq (h :: h' :: t', b))
+=   { eval deq }
+  enq x (h' :: t', b)
+=   { eval enq }
+  h' :: t', x :: b
+
+QED

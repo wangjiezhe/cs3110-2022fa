@@ -1,0 +1,54 @@
+module type Stack = sig
+  type 'a t
+  val empty : 'a t
+  val is_empty : 'a t -> bool
+  val peek : 'a t -> 'a
+  val push : 'a -> 'a t -> 'a t
+  val pop : 'a t -> 'a t
+end
+
+module ListStack = struct
+  type 'a t = 'a list
+  let empty = []
+  let is_empty = function [] -> true | _ -> false
+  let peek = List.hd
+  let push = List.cons
+  let pop = List.tl
+end
+
+
+
+Algebraic specifications:
+
+1. is_empty empty = true
+2. is_empty (push x s) = false
+3. peek (push x s) = x
+4. pop (push x s) = s
+
+Proof:
+
+  is_empty empty
+=   { evaluation }
+  is_empty []
+=   { evaluation }
+  true
+
+  is_empty (push x s)
+=   { evaluation }
+  is_empty （ x :: s )
+=   { evaluation }
+  false
+
+  peek (push x s)
+=   { evaluation }
+  peek (x :: s)
+=   { evaluation }
+  x
+
+  pop (push x s)
+=   { evaluation }
+  pop (x :: s)
+=   { evaluation }
+  s
+
+QED
