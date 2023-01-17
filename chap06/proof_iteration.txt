@@ -1,0 +1,66 @@
+let rec f_r n =
+  if n = 0 then i else op n (f_r (n - 1))
+
+let rec f_i acc n =
+  if n = 0 then acc
+  else f_i (op acc n) (n - 1)
+
+let f_tr = f_i i
+
+
+
+Theorem: f_r = f_tr
+
+Proof:  By extensionality, it suffices to show that forall n, f_r n = f_tr n.
+
+As in the previous proof for fact, we will need a strengthened induction
+hypothesis. So we first prove this lemma, which quantifies over all accumulators
+that could be input to f_i, rather than only i:
+
+  Lemma: forall n, forall acc, op acc (f_r n) = f_i acc n
+
+  Proof of Lemma: by induction on n.
+  P(n) = forall acc, op acc (f_r n) = f_i acc n
+
+  Base: n = 0
+  Show: forall acc, op acc (f_r 0) = f_i acc 0
+
+    op acc (f_r 0)
+  =   { evaluation }
+    op acc i
+  =   { if we assume forall x, op x i = x }
+    acc
+
+    f_i acc 0
+  =   { evaluation }
+    acc
+
+  Inductive case: n = k + 1
+  Show: forall acc, op acc (f_r (k + 1)) = f_i acc (k + 1)
+  IH: forall acc, op acc (f_r k) = f_i acc k
+
+    op acc (f_r (k + 1))
+  =   { evaluation }
+    op acc (op (k + 1) (f_r k))
+  =   { if we assume forall x y z, op x (op y z) = op (op x y) z }
+    op (op acc (k + 1)) (f_r k)
+
+    f_i acc (k + 1)
+  =   { evaluation }
+    f_i (op acc (k + 1)) k
+  =   { IH, instantiating acc as op acc (k + 1)}
+    op (op acc (k + 1)) (f_r k)
+
+  QED
+
+The proof then follows almost immediately from the lemma:
+
+  f_r n
+=   { if we assume forall x, op i x = x }
+  op i (f_r n)
+=   { lemma, instantiating acc as i }
+  f_i i n
+=   { evaluation }
+  f_tr n
+
+QED

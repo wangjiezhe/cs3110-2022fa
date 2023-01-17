@@ -1,0 +1,28 @@
+let compose f g x = f (g x)
+let ( << ) = compose
+
+
+
+Theorem: (f << g) << h  =  f << (g << h)
+
+Proof: By extensionality, we need to show
+  ((f << g) << h) x  =  (f << (g << h)) x
+for an arbitrary x.
+
+  ((f << g) << h) x
+=   { evaluation of << }
+  (f << g) (h x)
+=   { evaluation of << }
+  f (g (h x))
+
+and
+
+  (f << (g << h)) x
+=   { evaluation of << }
+  f ((g << h) x)
+=   { evaluation of << }
+  f (g (h x))
+
+So ((f << g) << h) x = f (g (h x)) = (f << (g << h)) x.
+
+QED

@@ -1,0 +1,55 @@
+let rec fact n =
+  if n = 0 then 1 else n * fact (n - 1)
+
+let rec facti acc n =
+  if n = 0 then acc else facti (acc * n) (n - 1)
+
+let fact_tr n = facti 1 n
+
+
+
+Claim: forall n, forall p . p * fact n = facti p n
+
+Proof: by induction on n.
+P(n) = forall p, p * fact n = facti p n
+
+Base case:  n = 0
+Show: forall p,  p * fact 0 = facti p 0
+
+  p * fact 0
+=   { evaluation and algebra }
+  p
+=   { evaluation }
+  facti p 0
+
+Inductive case: n = k + 1
+Show: forall p,  p * fact (k + 1) = facti p (k + 1)
+IH: forall p,  p * fact k = facti p k
+
+  p * fact (k + 1)
+=   { evaluation }
+  p * (k + 1) * fact k
+=   { IH, instantiating its p as p * (k + 1) }
+  facti (p * (k + 1)) k
+
+  facti p (k + 1)
+=   { evaluation }
+  facti (p * (k + 1)) k
+
+QED
+
+
+
+Claim: forall n, fact n = fact_tr n
+
+Proof:
+
+  fact n
+=   { algebra }
+  1 * fact n
+=   { previous claim }
+  facti 1 n
+=   { evaluation }
+  fact_tr n
+
+QED

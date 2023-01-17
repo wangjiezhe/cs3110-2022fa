@@ -1,0 +1,32 @@
+let rec sumto n =
+  if n = 0 then 0 else n + sumto (n - 1)
+
+
+
+Claim: sumto n = n * (n + 1) / 2
+
+Proof: by induction on n.
+P(n) = sumto n = n * (n + 1) / 2
+
+Base case: n = 0
+Show: sumto 0 = 0 * (0 + 1) / 2
+
+  sumto 0
+=   { evaluation }
+  0
+=   { algebra }
+  0 * (0 + 1) / 2
+
+Inductive case: n = k + 1
+Show: sumto (k + 1) = (k + 1) * ((k + 1) + 1) / 2
+IH: sumto k = k * (k + 1) / 2
+
+  sumto (k + 1)
+=   { evaluation }
+  k + 1 + sumto k
+=   { IH }
+  k + 1 + k * (k + 1) / 2
+=   { algebra }
+  (k + 1) * (k + 2) / 2
+
+QED
