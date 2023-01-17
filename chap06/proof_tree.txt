@@ -1,0 +1,38 @@
+type 'a tree = Leaf | Node   of 'a tree * 'a * 'a tree
+
+let rec reflect = function
+  | Leaf -> Leaf
+  | Node (l, v, r) -> Node (reflect r, v, reflect l)
+
+
+
+Claim: forall t, reflect (reflect t) = t
+
+Proof: by induction on t.
+P(t) = reflect (reflect t) = t
+
+Base case: t = Leaf
+Show: reflect (reflect Leaf) = Leaf
+
+  reflect (reflect Leaf)
+=   { evaluation }
+  reflect Leaf
+=   { evaluation }
+  Leaf
+
+Inductive case: t = Node (l, v, r)
+IH1: reflect (reflect l) = l
+IH2: reflect (reflect r) = r
+Show: reflect (reflect (Node (l, v, r))) = Node (l, v, r)
+
+  reflect (reflect (Node (l, v, r)))
+=   { evaluation }
+  reflect (Node (reflect r, v, reflect l))
+=   { evaluation }
+  Node (reflect (reflect l), v, reflect (reflect r))
+=   { IH1 }
+  Node (l, v, reflect (reflect r))
+=   { IH2 }
+  Node (l, v, r)
+
+QED

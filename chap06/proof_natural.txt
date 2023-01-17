@@ -1,0 +1,44 @@
+type nat = Z | S of nat
+
+let rec plus a b =
+  match a with
+  | Z -> b
+  | S k -> S (plus k b)
+
+
+
+Claim:  plus Z n = n
+
+Proof:
+
+  plus Z n
+=   { evaluation }
+  n
+
+QED
+
+
+
+Claim:  plus n Z = n
+
+Proof: by induction on n.
+P(n) = plus n Z = n
+
+Base case: n = Z
+Show: plus Z Z = Z
+
+  plus Z Z
+=   { evaluation }
+  Z
+
+Inductive case: n = S k
+IH: plus k Z = k
+Show: plus (S k) Z = S k
+
+  plus (S k) Z
+=   { evaluation }
+  S (plus k Z)
+=   { IH }
+  S k
+
+QED
