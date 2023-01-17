@@ -17,3 +17,27 @@
  (name qcheck_sorts)
  (modules qcheck_sorts)
  (libraries ounit2 qcheck sorts))
+
+(library
+ (name ex06)
+ (modules ex06))
+
+(test
+ (name test_mySet)
+ (modules test_mySet)
+ (libraries ounit2 mySet))
+
+(test
+ (name qcheck_random_lists)
+ (modules qcheck_random_lists)
+ (libraries qcheck))
+
+(test
+ (name qcheck_odd_divisor)
+ (modules qcheck_odd_divisor)
+ (libraries qcheck))
+
+(test
+ (name qcheck_avg)
+ (modules qcheck_avg)
+ (libraries qcheck))

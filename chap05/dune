@@ -14,7 +14,9 @@
 
 (library
  (name mySet)
- (modules mySet))
+ (modules mySet)
+ (instrumentation
+  (backend bisect_ppx)))
 
 (library
  (name algebra)
