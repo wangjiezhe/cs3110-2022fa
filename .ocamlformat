@@ -8,4 +8,4 @@ break-cases=fit-or-vertical
 exp-grouping=preserve
 leading-nested-match-parens=true
 doc-comments=before
-parse-docstrings=true
+# parse-docstrings=true

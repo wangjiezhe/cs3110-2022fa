@@ -1,0 +1,31 @@
+(library
+ (name counter)
+ (modules counter))
+
+(library
+ (name pointer)
+ (modules pointer))
+
+(library
+ (name fact)
+ (modules fact))
+
+(library
+ (name singlyLinkedList)
+ (modules singlyLinkedList))
+
+(library
+ (name ref)
+ (modules ref))
+
+(library
+ (name singlyLinkedList2)
+ (modules singlyLinkedList2))
+
+(library
+ (name myStack2)
+ (modules myStack2))
+
+(library
+ (name ex07)
+ (modules ex07))
