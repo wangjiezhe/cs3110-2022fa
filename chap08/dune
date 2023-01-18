@@ -1,0 +1,11 @@
+(library
+ (name listMap)
+ (modules listMap))
+
+(library
+ (name arrayMap)
+ (modules arrayMap))
+
+(library
+ (name hashMap)
+ (modules hashMap))
