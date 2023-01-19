@@ -40,9 +40,10 @@ module ListQueue : Queue = struct
 end
 
 module BatchedQueue : Queue = struct
-  (** [{o; i}] represents the queue [o @ List.rev i]. For example,
+  (** AF: [{o; i}] represents the queue [o @ List.rev i]. For example,
       [{o = \[1; 2\]; i = \[5; 4; 3\]}] represents the queue [1, 2, 3, 4, 5],
-      where [1] is the front element. To avoid ambiguity about emptiness,
+      where [1] is the front element. 
+      RI: To avoid ambiguity about emptiness,
       whenever only one of the lists is empty, it must be [i]. For example,
       [{o = \[1\]; i = \[\]}] is a legal representation, but
       [{o = \[\]; i = \[1\]}] is not. This implies that if [o] is empty, [i]
@@ -60,14 +61,17 @@ module BatchedQueue : Queue = struct
     | { o = []; _ } -> true
     | _ -> false
 
+  (** Efficiency: O(1) *)
   let enqueue x = function
     | { o = []; _ } -> { o = [ x ]; i = [] }
     | { o; i } -> { o; i = x :: i }
 
+  (** Efficiency: O(1) *)
   let front = function
     | { o = []; _ } -> raise Empty
     | { o = h :: _; _ } -> h
 
+  (** Efficiency: worst O(n), amortized O(1) *)
   let dequeue = function
     | { o = []; _ } -> raise Empty
     | { o = [ _ ]; i } -> { o = List.rev i; i = [] }

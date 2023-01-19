@@ -71,13 +71,13 @@ let resize_if_needed tab =
   else if lf < 0.5 then rehash tab (capacity tab / 2)
   else ()
 
-(** Efficiency: O(n) *)
+(** Efficiency: worst O(n), amortized O(1) *)
 let insert k v tab =
   insert_no_resize k v tab;
   (* O(L) *)
   resize_if_needed tab (* O(n) *)
 
-(** Efficiency: expected O(L) *)
+(** Efficiency: expected O(L), i.e. expected O(1) *)
 let find k tab = List.assoc_opt k tab.buckets.(index k tab)
 
 (** [remove_no_resize k tab] removes [k] from [tab] and does not trigger
@@ -90,7 +90,7 @@ let remove_no_resize k tab =
   if List.mem_assoc k old_bucket then tab.size <- tab.size - 1;
   ()
 
-(** Efficiency: O(n) *)
+(** Efficiency: worst O(n), amortized O(1) *)
 let remove k tab =
   remove_no_resize k tab;
   (* O(L) *)
