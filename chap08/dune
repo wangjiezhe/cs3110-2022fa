@@ -9,3 +9,16 @@
 (library
  (name hashMap)
  (modules hashMap))
+
+(library
+ (name bstSet)
+ (modules bstSet))
+
+(library
+ (name rbSet)
+ (modules rbSet))
+
+(library
+ (name rbMap)
+ (modules rbMap)
+ (libraries rbSet))
