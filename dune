@@ -1,0 +1,6 @@
+(env
+ (dev
+  (flags
+   (:standard -warn-error -A) ; make warnings non-fatal
+   (:standard -w -32) ; disable unused-value-declaration warnings
+   )))
