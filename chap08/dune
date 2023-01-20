@@ -22,3 +22,7 @@
  (name rbMap)
  (modules rbMap)
  (libraries rbSet))
+
+(library
+ (name sequence)
+ (modules sequence))
