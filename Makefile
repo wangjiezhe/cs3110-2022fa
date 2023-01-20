@@ -4,7 +4,7 @@ TESTBIN := \
 	chap04/test_ex04.exe \
 	chap05/test_myStack.exe \
 	chap06/test_sorts.exe \
-	chap06/qcheck_sorts.exe
+	chap06/qcheck_sorts.exe \
 	chap06/test_mySet.exe \
 	chap06/qcheck_random_lists.exe \
 	chap06/qcheck_odd_divisor.exe \

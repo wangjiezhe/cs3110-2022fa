@@ -20,7 +20,7 @@ opam install -y utop odoc ounit2 qcheck bisect_ppx menhir ocaml-lsp-server ocaml
 Then install some packages we would like to use in this course.
 
 ```bash
-opam install -y zarith
+opam install -y zarith lwt_ppx
 ```
 
 Finally, we can launch `utop` now!

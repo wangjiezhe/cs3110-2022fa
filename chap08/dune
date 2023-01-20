@@ -26,3 +26,18 @@
 (library
  (name sequence)
  (modules sequence))
+
+(library
+ (name memoization)
+ (modules memoization))
+
+(library
+ (name promise)
+ (modules promise))
+
+(executable
+ (name read2)
+ (modules read2)
+ (libraries lwt.unix)
+ (preprocess
+  (pps lwt_ppx)))
