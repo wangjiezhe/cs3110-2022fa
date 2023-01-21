@@ -55,3 +55,8 @@
 (library
  (name monad)
  (modules monad))
+
+(library
+ (name ex08)
+ (modules ex08)
+ (libraries rbSet))

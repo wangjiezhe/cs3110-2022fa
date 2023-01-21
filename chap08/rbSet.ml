@@ -53,7 +53,7 @@ let balance = function
   | Blk, a, x, Node (Red, Node (Red, b, y, c), z, d) (* 3 *)
   | Blk, a, x, Node (Red, b, y, Node (Red, c, z, d)) (* 4 *) ->
       Node (Red, Node (Blk, a, x, b), y, Node (Blk, c, z, d))
-  | _ -> assert false
+  | c, l, v, r -> Node (c, l, v, r)
 
 (** Efficiency: O(log n)
     Steps of insertion:
