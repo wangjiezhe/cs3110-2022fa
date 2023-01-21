@@ -41,3 +41,17 @@
  (libraries lwt.unix)
  (preprocess
   (pps lwt_ppx)))
+
+(library
+ (name maybeMonad)
+ (modules maybeMonad)
+ (libraries monad))
+
+(library
+ (name writerMonad)
+ (modules writerMonad)
+ (libraries monad))
+
+(library
+ (name monad)
+ (modules monad))
