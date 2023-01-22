@@ -398,7 +398,7 @@ let rec interleave s1 s2 =
   Cons (hd s1, fun () -> Cons (hd s2, fun () -> interleave (tl s1) (tl s2)))
 
 (* Exercise: sift [★★★] *)
-let rec sift n s = filter (fun x -> x mod n <> 0) s
+let sift n s = filter (fun x -> x mod n <> 0) s
 
 (* Exercise: primes [★★★] *)
 let rec primes_aux n = Cons (n, fun () -> sift n (primes_aux (n + 1)))
@@ -408,12 +408,11 @@ let primes = primes_aux 2
 let fact n =
   let rec fact_aux acc = function
     | 0 -> acc
-    | n -> fact_aux (acc * n) (n - 1)
+    | n -> fact_aux (acc *. float_of_int n) (n - 1)
   in
-  fact_aux 1 n
+  fact_aux 1. n
 
-let e_terms x =
-  map (fun k -> (x ** float_of_int k) /. float_of_int (fact k)) nats
+let e_terms x = map (fun k -> (x ** float_of_int k) /. fact k) nats
 
 let rec total s =
   let h = hd s in
@@ -429,3 +428,236 @@ let rec within eps s =
 let e x eps = x |> e_terms |> total |> within eps
 
 (* Exercise: better e [★★★★] *)
+let rec e_terms_rec x n =
+  if n = 0 then 1. else e_terms_rec x (n - 1) *. x /. float_of_int n
+
+(* iterate *)
+let rec iterate f x = Cons (x, fun () -> iterate f (f x))
+let pow2'' = iterate (fun x -> x * 2) 1
+let evens'' = iterate (fun x -> x + 2) 0
+
+(* iterate with index *)
+let rec iteratei f x i = Cons (x, fun () -> iteratei f (f x i) (i + 1))
+let e_terms' x = iteratei (fun y i -> y *. x /. float_of_int i) 1. 1
+
+let rec within' eps s =
+  let h1 = hd s in
+  let t = tl s in
+  let h2 = hd t in
+  if abs_float ((h1 -. h2) /. min h1 h2) < eps then h2 else within' eps t
+
+let e' x eps = x |> e_terms' |> total |> within' eps
+
+(* Exercise: different sequence rep [★★★] *)
+type 'a sequence2 = Cons of (unit -> 'a * 'a sequence2)
+
+let hd (Cons s) =
+  match s () with
+  | h, _ -> h
+
+let tl (Cons s) =
+  match s () with
+  | _, t -> t
+
+let rec map f (Cons s) =
+  Cons
+    (fun () ->
+      match s () with
+      | h, t -> (f h, map f t))
+
+(* Exercise: lazy hello [★] *)
+let pl = lazy (print_endline "Hello lazy world")
+let () = Lazy.force pl
+
+(* Exercise: lazy and [★★] *)
+let ( &&& ) lb1 lb2 = Lazy.force lb1 && Lazy.force lb2
+
+(* Exercise: lazy sequence [★★★] *)
+type 'a lazysequence = Cons of 'a * 'a lazysequence Lazy.t
+
+let hd (Cons (h, _)) = h
+let tl (Cons (_, t)) = Lazy.force t
+
+let rec map f s =
+  let h = hd s in
+  let t = tl s in
+  Cons (f h, lazy (map f t))
+
+let rec filter p s =
+  let h = hd s in
+  let t = tl s in
+  if p h then Cons (h, lazy (filter p t)) else filter p t
+
+(* Exercise: promise and resolve [★★] *)
+open Promise
+
+let (p : int promise), r = make ()
+
+let _ =
+  p >>= fun x ->
+  print_int x;
+  print_newline ();
+  return ()
+
+let () = resolve r 3110
+
+(* Exercise: promise and resolve lwt [★★] *)
+let p, r = Lwt.wait ()
+
+(* open Lwt.Infix *)
+(* let _ = p >>= fun x -> Lwt_io.printf "%d\n" x *)
+let _ =
+  let%lwt x = p in
+  Lwt_io.printf "%d\n" x
+
+let () = Lwt.wakeup r 1224
+
+(* Exercise: timing challenge 1 [★★] *)
+
+(** [delay s] is a promise that resolves after about [s] seconds. *)
+let delay (sec : float) : unit Lwt.t = Lwt_unix.sleep sec
+
+(* let delay_then_print () = delay 3.0 >>= fun () -> Lwt_io.printf "%s\n" "done" *)
+let delay_then_print () =
+  let%lwt _ = delay 3.0 in
+  Lwt_io.printf "%s\n" "done"
+
+(* Exercise: timing challenge 2 [★★★] *)
+open Lwt.Infix
+
+let timing2 () =
+  let _t1 = delay 1. >>= fun () -> Lwt_io.printl "1" in
+  let _t2 = delay 10. >>= fun () -> Lwt_io.printl "2" in
+  let _t3 = delay 20. >>= fun () -> Lwt_io.printl "3" in
+  Lwt_io.printl "all done"
+(* Result:
+   "all done" is immediately printed.
+   [_t1], [_t2], [_t3] run simultaneously. *)
+
+(* Exercise: timing challenge 3 [★★★] *)
+let timing3 () =
+  delay 1. >>= fun () ->
+  Lwt_io.printl "1" >>= fun () ->
+  delay 10. >>= fun () ->
+  Lwt_io.printl "2" >>= fun () ->
+  delay 20. >>= fun () ->
+  Lwt_io.printl "3" >>= fun () -> Lwt_io.printl "all done"
+(* Result:
+   [delay 1], [delay 2], [delay 3] run orderly,
+   and "all done" is printed after 31s. *)
+
+(* Exercise: timing challenge 4 [★★★] *)
+let timing4 () =
+  let t1 = delay 1. >>= fun () -> Lwt_io.printl "1" in
+  let t2 = delay 10. >>= fun () -> Lwt_io.printl "2" in
+  let t3 = delay 20. >>= fun () -> Lwt_io.printl "3" in
+  Lwt.join [ t1; t2; t3 ] >>= fun () -> Lwt_io.printl "all done"
+(* Result:
+   [t1], [t2], [t3] run simultaneously,
+   and "all done" is printed after 20s. *)
+
+(* Exercise: file monitor [★★★★] *)
+(* see monitor.ml *)
+
+(* Exercise: add opt [★★] *)
+module type Monad = sig
+  type 'a t
+
+  val return : 'a -> 'a t
+  val ( >>= ) : 'a t -> ('a -> 'b t) -> 'b t
+end
+
+module Maybe : Monad = struct
+  type 'a t = 'a option
+
+  let return x = Some x
+
+  let ( >>= ) m f =
+    match m with
+    | Some x -> f x
+    | None -> None
+end
+
+let add (x : int Maybe.t) (y : int Maybe.t) =
+  let open Maybe in
+  x >>= fun a ->
+  y >>= fun b -> return (a + b)
+
+(* Exercise: fmap and join [★★] *)
+module type ExtMonad = sig
+  type 'a t
+
+  val return : 'a -> 'a t
+  val ( >>= ) : 'a t -> ('a -> 'b t) -> 'b t
+  val ( >>| ) : 'a t -> ('a -> 'b) -> 'b t
+  val join : 'a t t -> 'a t
+end
+
+module MabyeExt = struct
+  type 'a t = 'a option
+
+  let return x = Some x
+
+  let ( >>= ) m f =
+    match m with
+    | Some x -> f x
+    | None -> None
+
+  let ( >>| ) m f =
+    match m with
+    | Some x -> Some (f x)
+    | None -> None
+
+  let join m =
+    match m with
+    | Some x -> x
+    | None -> None
+end
+
+(* Exercise: fmap and join again [★★] *)
+module MabyeExt2 = struct
+  include Maybe
+
+  let ( >>| ) m f = m >>= fun x -> return (f x)
+  let join m = m >>= fun x -> x
+end
+
+(* Exercise: bind from fmap+join [★★★] *)
+module type FmapJoinMonad = sig
+  type 'a t
+
+  val ( >>| ) : 'a t -> ('a -> 'b) -> 'b t
+  val join : 'a t t -> 'a t
+  val return : 'a -> 'a t
+end
+
+module type BindMonad = sig
+  type 'a t
+
+  val return : 'a -> 'a t
+  val ( >>= ) : 'a t -> ('a -> 'b t) -> 'b t
+end
+
+module MakeMonad (M : FmapJoinMonad) : BindMonad = struct
+  include M
+
+  let ( >>= ) m f = m >>| (fun x -> f x) |> join
+end
+
+(* Exercise: list monad [★★★] *)
+module ListMonad : ExtMonad = struct
+  type 'a t = 'a list
+
+  let return x = [ x ]
+  let join l = List.flatten l
+  let ( >>| ) l f = List.map f l
+  let ( >>= ) l f = l >>| f |> join
+end
+
+(* Exercise: trivial monad laws [★★★] *)
+module Trivial : Monad = struct
+  type 'a t = Wrap of 'a
+
+  let return x = Wrap x
+  let ( >>= ) (Wrap x) f = f x
+end

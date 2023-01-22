@@ -59,4 +59,11 @@
 (library
  (name ex08)
  (modules ex08)
- (libraries rbSet))
+ (libraries rbSet promise lwt.unix)
+ (preprocess
+  (pps lwt_ppx)))
+
+(executable
+ (name monitor)
+ (modules monitor)
+ (libraries lwt.unix))
