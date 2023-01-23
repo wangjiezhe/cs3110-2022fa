@@ -235,3 +235,78 @@ let x = e1 in e2 ==> v
   if e1 ==> v1
   and e2{v1/x} ==> v
 ```
+
+
+
+## evaluation in the environment model
+
+1. lambda calculus:
+
+```
+<env, x> ==> v
+  if env(x) = v
+
+<env, e1 e2> ==> v
+  if  <env, e1> ==> (| fun x -> e, defenv |)
+  and <env, e2> ==> v2
+  and <defenv[x |-> v2], e> ==> v
+
+<env, fun x -> e> ==> (|fun x -> e, env|)
+```
+
+2. constants, ignore the environment:
+
+```
+<env, i> ==> i
+
+<env, b> ==> b
+```
+
+3. directly use the environment without changing it:
+
+```
+<env, e1 + e2> ==> n
+  if  <env,e1> ==> n1
+  and <env,e2> ==> n2
+  and n is the result of applying the primitive operation + to n1 and n2
+
+<env, (e1, e2)> ==> (v1, v2)
+  if  <env, e1> ==> v1
+  and <env, e2> ==> v2
+
+<env, fst e> ==> v1
+  if <env, e> ==> (v1, v2)
+
+<env, snd e> ==> v2
+  if <env, e> ==> (v1, v2)
+
+<env, Left e> ==> Left v
+  if <env, e> ==> v
+
+<env, Right e> ==> Right v
+  if <env, e> ==> v
+
+<env, if e1 then e2 else e3> ==> v2
+  if <env, e1> ==> true
+  and <env, e2> ==> v2
+
+<env, if e1 then e2 else e3> ==> v3
+  if <env, e1> ==> false
+  and <env, e3> ==> v3
+```
+
+4. binding constructs (i.e., match and let expression):
+
+```
+<env, match e with Left x1 -> e1 | Right x2 -> e2> ==> v1
+  if  <env, e> ==> Left v
+  and <env[x1 |-> v], e1> ==> v1
+
+<env, match e with Left x1 -> e1 | Right x2 -> e2> ==> v2
+  if  <env, e> ==> Right v
+  and <env[x2 |-> v], e2> ==> v2
+
+<env, let x = e1 in e2> ==> v2
+  if  <env, e1> ==> v1
+  and <env[x |-> v1], e2> ==> v2
+```
