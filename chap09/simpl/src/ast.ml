@@ -14,17 +14,17 @@ type expr =
   | If of expr * expr * expr      (* if-then-else expression *)
 
 (*
-   Syntax in BNF:
+  Syntax in BNF:
 
-   e ::= x | i | b | e1 bop e2
-       | if e1 then e2 else e3
-       | let x = e1 in e2
+  e ::= x | i | b | e1 bop e2
+      | if e1 then e2 else e3
+      | let x = e1 in e2
 
-   bop ::= + | * | <=
+  bop ::= + | * | <=
 
-   x ::= <identifiers>
+  x ::= <identifiers>
 
-   i ::= <integers>
+  i ::= <integers>
 
-   b ::= true | false
+  b ::= true | false
 *)
