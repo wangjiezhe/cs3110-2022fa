@@ -21,7 +21,7 @@ coverage-clean:
 
 .PHONY: clean
 clean: coverage-clean
-	rm -rf _build
+	find . -name '_build' | xargs rm -rf
 
 .PHONY: coverage
 coverage: coverage-clean build
