@@ -21,7 +21,7 @@ v ::= fun x -> e | i | b | (v1, v2) | Left v | Right v
 ```
 
 
-## Small-Step Relation rules
+## Small-Step evaluation relation rules
 
 We just use call-by-value evaluation strategy.
 
@@ -180,7 +180,7 @@ FV(let x = e1 in e2) = FV(e1) + (FV(e2) - {x})
 
 
 
-## Big-Step Relation
+## Big-Step evaluation relation rules
 
 ```
 e1 e2 ==> v
@@ -238,7 +238,7 @@ let x = e1 in e2 ==> v
 
 
 
-## evaluation in the environment model
+## Evaluation in the environment model
 
 1. lambda calculus:
 
@@ -310,3 +310,207 @@ let x = e1 in e2 ==> v
   if  <env, e1> ==> v1
   and <env[x |-> v1], e2> ==> v2
 ```
+
+## Constraint-based type inference (without let expression)
+
+types:
+
+```
+t ::= 'x | int | bool | t1 -> t2
+```
+
+1. constants and names:
+
+```
+env |- i : int -| {}
+
+env |- b : bool -| {}
+
+env |- n : env(n) -| {}
+```
+
+2. if expression:
+
+```
+env |- if e1 then e2 else e3 : 't -| C1, C2, C3, C
+  if fresh 't
+  and env |- e1 : t1 -| C1
+  and env |- e2 : t2 -| C2
+  and env |- e3 : t3 -| C3
+  and C = {t1 = bool, 't = t2, 't = t3}
+```
+
+3. anonymous functions:
+
+```
+env |- fun x -> e : 't1 -> t2 -| C
+  if fresh 't1
+  and env, x : 't1 |- e : t2 -| C
+```
+
+4. function application:
+
+```
+env |- e1 e2 : 't -| C1, C2, C
+  if fresh 't
+  and env |- e1 : t1 -| C1
+  and env |- e2 : t2 -| C2
+  and C = {t1 = t2 -> 't}
+```
+
+## Solving Constraints
+
+type substitution:
+
+```
+int {t / 'x} = int
+bool {t / 'x} = bool
+'x {t / 'x} = t
+'y {t / 'x} = 'y
+(t1 -> t2) {t / 'x} =  (t1 {t / 'x} ) -> (t2 {t / 'x} )
+```
+
+sequential composition (asscoiative, but bot commutative):
+
+```
+t (S1; S2) = (t S1) S2
+```
+
+HM type inference example:
+
+```
+I |- fun f -> fun x -> f (( + ) x 1) : 'a -> 'b -> 'e -| {'a = 'd -> 'e, 'c = int -> 'd, int -> int -> int = 'b -> 'c}
+  I, f:'a |- fun x -> f (( + ) x 1) : 'b -> 'e -| {'a = 'd -> 'e, 'c = int -> 'd, int -> int -> int = 'b -> 'c}
+    I, f:'a, x:'b |- f (( + ) x 1) : 'e -| {'a = 'd -> 'e, 'c = int -> 'd, int -> int -> int = 'b -> 'c}
+      I, f:'a, x:'b |- f : 'a -| {}
+      I, f:'a, x:'b |- (( + ) x) 1 : 'd -| {'c = int -> 'd, int -> int -> int = 'b -> 'c}
+        I, f:'a, x:'b |- ( + ) x : 'c -| {int -> int -> int = 'b -> 'c}
+          I, f:'a, x:'b |- ( + ) : int -> int -> int -| {}
+          I, f:'a, x:'b |- x : 'b -| {}
+        I, f:'a, x:'b |- 1 : int -| {}
+```
+
+unification:
+
+```
+'a = 'd -> 'e
+'c = int -> 'd
+int -> int -> int = 'b -> 'c
+```
+
+```
+{'d -> 'e / 'a}
+
+'c = int -> 'd
+int -> int -> int = 'b -> 'c
+```
+
+```
+{'d -> 'e / 'a, int -> 'd / 'c}
+
+int -> int -> int = 'b -> 'c
+```
+
+```
+{'d -> 'e / 'a, int -> 'd / 'c}
+
+int -> int -> int = 'b -> int -> 'd
+```
+
+```
+{'d -> 'e / 'a, int -> 'd / 'c}
+
+int = 'b
+int -> int = int -> 'd
+```
+
+```
+{'d -> 'e / 'a, int -> 'd / 'c, int / 'b}
+
+int -> int = int -> 'd
+```
+
+```
+{'d -> 'e / 'a, int -> 'd / 'c, int / 'b}
+
+int = int
+int = 'd
+```
+
+```
+{'d -> 'e / 'a, int -> 'd / 'c, int / 'b, int / 'd}
+```
+
+apply the substitution output by unification to the type inferred by constraint generation:
+
+```
+('a -> 'b -> 'e) {('d -> 'e) / 'a}; {(int -> 'd) / 'c}; {int / 'b}; {int / 'd}
+=
+(('d -> 'e) -> 'b -> 'e) {(int -> 'd) / 'c}; {int / 'b}; {int / 'd}
+=
+(('d -> 'e) -> 'b -> 'e) {int / 'b}; {int / 'd}
+=
+(('d -> 'e) -> int -> 'e) {int / 'd}
+=
+(int -> 'e) -> int -> 'e
+```
+
+## Let Polymorphism
+
+```
+env |- let x = e1 in e2 : t2 -| C1, C2
+  if env |- e1 : t1 -| C1
+  and generalize(C1, env, x : t1) |- e2 : t2 -| C2
+
+env |- n : instantiate(env(n)) -| {}
+```
+
+generalization:
+
+1. run the unification algorithm on `C1`, get a substitution `S1`.
+2. return `u1 = t1 S1` as the inferred type of `e1`.
+3. return `env1 = env S1`
+4. generalize only variables that **are** in `u1` but are **not** in `env`.
+5. As the result, we get `generalize(C1, env, x : t1) = env1, x : 'a1 ... 'an . u1`.
+
+instantiation:
+
+1. given a type scheme `'a1 'a2 ... 'an . t`, choose `n` fresh variables.
+2. substituting each of those for `'a1` through `'an` in `t`.
+
+e.g.
+
+```
+{} |- let id = fun x -> x in (let a = id 0 in id true): 'e -| 'b -> 'b = int -> 'c, 'd -> 'd = bool -> 'e
+  {} |- fun x -> x : 'a -> 'a -| {}
+    x : 'a |- x : 'a -| {}
+  id : 'a . 'a -> 'a |- let a = id 0 in id true : 'e -| 'b -> 'b = int -> 'c, 'd -> 'd = bool -> 'e
+    id : 'a . 'a -> 'a |- id 0 : 'c -| 'b -> 'b = int -> 'c
+      id : 'a . 'a -> 'a |- id : 'b -> 'b
+      id : 'a . 'a -> 'a |- 0 : int
+    id : 'a . 'a -> 'a, a : 'c |- id true : 'e -| 'd -> 'd = bool -> 'e
+      id : 'a . 'a -> 'a, a : 'c |- id : 'd -> 'd -| {}
+      id : 'a . 'a -> 'a, a : 'c |- true : bool -| {}
+```
+
+unification:
+
+```
+'b -> 'b = int -> 'c
+'d -> 'd = bool -> 'e
+```
+
+```
+'b = int
+'b = 'c
+'d = bool
+'e = 'd
+```
+
+```
+'e = bool
+```
+
+## Value restriction
+
+OCaml use weak type variables. Omitted here.

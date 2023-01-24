@@ -60,6 +60,32 @@ end
 
 open Context
 
+(*
+  Type system:
+
+  env |- i : int
+  env |- b : bool
+  {x : t, ...} |- x : t
+
+  env |- let x = e1 in e2 : t2
+    if env |- e1 : t1
+    and env[x |-> t1] |- e2 :
+
+  env |- e1 bop e2 : int
+    if bop is + or *
+    and env |- e1 : int
+    and env |- e2 : int
+
+  env |- e1 <= e2 : bool
+    if env |- e1 : int
+    and env |- e2 : int
+
+  env |- if e1 then e2 else e3 : t
+    if env |- e1 : bool
+    and env |- e2 : t
+    and env |- e3 : t
+*)
+
 (** [typeof ctx e] is the type of [e] in context [ctx].
     Raises: [Failure] if [e] is not well typed in [ctx]. *)
 let rec typeof ctx = function
