@@ -1,6 +1,6 @@
 (library
- (name matching)
- (modules matching)
+ (name myMatching)
+ (modules myMatching)
  (instrumentation
   (backend bisect_ppx)))
 
@@ -23,7 +23,7 @@
 (test
  (name test_matching)
  (modules test_matching)
- (libraries ounit2 matching))
+ (libraries ounit2 myMatching))
 
 (library
  (name ex03)

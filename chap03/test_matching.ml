@@ -1,5 +1,5 @@
 open OUnit2
-open Matching
+open MyMatching
 
 let make_sum_test name expected_output input =
   name >:: fun _ ->

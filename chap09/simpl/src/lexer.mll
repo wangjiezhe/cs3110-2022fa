@@ -39,6 +39,7 @@ rule read =
   | "+" { PLUS }
   | "(" { LPAREN }
   | ")" { RPAREN }
+  | "," { COMMA }
   | "let" { LET }
   | "=" { EQUALS }
   | "in" { IN }

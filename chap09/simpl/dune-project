@@ -1,2 +1,14 @@
 (lang dune 2.9)
+
 (using menhir 2.1)
+
+(generate_opam_files true)
+
+(name simpl)
+
+(version 0.1)
+
+(package
+ (name simpl)
+ (synopsis "SimPL")
+ (description "SimPL"))

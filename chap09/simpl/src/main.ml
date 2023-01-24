@@ -10,6 +10,7 @@ let parse (s : string) : expr =
 type typ =
   | TInt
   | TBool
+  | TPair of typ * typ
 
 (** The error message produced if a variable is unbound. *)
 let unbound_var_err = "Unbound variable"
@@ -69,7 +70,7 @@ open Context
 
   env |- let x = e1 in e2 : t2
     if env |- e1 : t1
-    and env[x |-> t1] |- e2 :
+    and env[x |-> t1] |- e2 : t2
 
   env |- e1 bop e2 : int
     if bop is + or *
@@ -85,6 +86,13 @@ open Context
     and env |- e2 : t
     and env |- e3 : t
 *)
+(*
+  Type for pairs:
+
+  env |- (e1, e2) : t1 * t2
+    if env |- e1 : t1
+    and env |- e2 : t2
+*)
 
 (** [typeof ctx e] is the type of [e] in context [ctx].
     Raises: [Failure] if [e] is not well typed in [ctx]. *)
@@ -95,6 +103,7 @@ let rec typeof ctx = function
   | Let (x, e1, e2) -> typeof_let ctx x e1 e2
   | Binop (bop, e1, e2) -> typeof_bop ctx bop e1 e2
   | If (e1, e2, e3) -> typeof_if ctx e1 e2 e3
+  | Pair (e1, e2) -> typeof_pair ctx e1 e2
 
 (** Helper function for [typeof]. *)
 and typeof_let ctx x e1 e2 =
@@ -117,14 +126,19 @@ and typeof_if ctx e1 e2 e3 =
     if t2 = typeof ctx e3 then t2 else failwith if_branch_err
   else failwith if_guard_err
 
+(** Helper function for [typeof]. *)
+and typeof_pair ctx e1 e2 =
+  TPair (typeof ctx e1, typeof ctx e2)
+
 (** [typecheck e] checks whether [e] is well typed in
     the empty context. Raises: [Failure] if not. *)
 let typecheck e = ignore (typeof empty e)
 
 (** [is_value e] is whether [e] is a value. *)
-let is_value : expr -> bool = function
+let rec is_value : expr -> bool = function
   | Int _ | Bool _ -> true
   | Var _ | Let _ | Binop _ | If _ -> false
+  | Pair (e1, e2) -> is_value e1 && is_value e2
 
 (*
   Substitution rules:
@@ -141,6 +155,11 @@ let is_value : expr -> bool = function
   (let x = e1 in e2){e/x}  =  let x = e1{e/x} in e2
   (let y = e1 in e2){e/x}  =  let y = e1{e/x} in e2{e/x}
 *)
+(*
+  Substitution rule for pairs:
+
+  (e1, e2){v/x} = (e1{v/x}, e2{v/x})
+*)
 
 (** [subst e v x] is [e] with [v] substituted for [x], that
     is, [e{v/x}]. *)
@@ -154,6 +173,7 @@ let rec subst e v x =
       let e1' = subst e1 v x in
       if x = y then Let (y, e1', e2) else Let (y, e1', subst e2 v x)
   | If (e1, e2, e3) -> If (subst e1 v x, subst e2 v x, subst e3 v x)
+  | Pair (e1, e2) -> Pair (subst e1 v x, subst e2 v x)
 
 (*
   Small-step evaluation rules:
@@ -184,6 +204,15 @@ let rec subst e v x =
 
   x -/->
 *)
+(*
+  Small-step evaluation rules for pairs:
+
+  (e1, e2) --> (e1', e2)
+  if e1 --> e1'
+
+  (v1, e2) --> (v1, e2')
+    if e2 --> e2'
+*)
 
 (** [step] is the [-->] relation, that is, a single step of
     evaluation. *)
@@ -199,6 +228,8 @@ let rec step : expr -> expr = function
   | If (Bool false, _, e3) -> e3
   | If (Int _, _, _) -> failwith if_guard_err
   | If (e1, e2, e3) -> If (step e1, e2, e3)
+  | Pair (e1, e2) when is_value e1 -> Pair (e1, step e2)
+  | Pair (e1, e2) -> Pair (step e1, e2)
 
 (** [step_bop bop v1 v2] implements the primitive operation
     [v1 bop v2].  Requires: [v1] and [v2] are both values. *)
@@ -255,6 +286,13 @@ let interp_small (s : string) : expr =
 
   x =/=>
 *)
+(*
+  Big-step evaluation rules for pairs:
+
+  (e1, e2) ==> (v1, v2)
+    if e1 ==> v1
+    and e2 ==> v2
+*)
 
 (** [eval_big e] is the [e ==> v] relation. *)
 let rec eval_big (e : expr) : expr =
@@ -264,6 +302,7 @@ let rec eval_big (e : expr) : expr =
   | Binop (bop, e1, e2) -> eval_bop bop e1 e2
   | Let (x, e1, e2) -> subst e2 (eval_big e1) x |> eval_big
   | If (e1, e2, e3) -> eval_if e1 e2 e3
+  | Pair (e1, e2) -> Pair (eval_big e1, eval_big e2)
 
 (** [eval_bop bop e1 e2] is the [e] such that [e1 bop e2 ==> e]. *)
 and eval_bop bop e1 e2 =

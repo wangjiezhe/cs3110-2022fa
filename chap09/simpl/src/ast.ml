@@ -12,6 +12,7 @@ type expr =
   | Binop of bop * expr * expr    (* binary operators *)
   | Let of string * expr * expr   (* let expression *)
   | If of expr * expr * expr      (* if-then-else expression *)
+  | Pair of expr * expr
 
 (*
   Syntax in BNF:

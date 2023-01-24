@@ -30,11 +30,15 @@ let ( ~& ) = address
 (* example *)
 let p = malloc 42
 let _ = deref p
-let _ = deref null
+
+(* let _ = deref null *)
+
 let _ = ~*p
 let () = assign p 2
 let _ = deref p
-let _ = assign null 0
+
+(* let _ = assign null 0 *)
+
 let () = p =* 3
 let _ = ~*p
 let _ = ~&p
