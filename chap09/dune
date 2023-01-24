@@ -1,3 +1,9 @@
 (library
  (name ex09)
+ (modules ex09)
+ (libraries simpl.interp))
+
+(library
+ (name curry_howard)
+ (modules curry_howard)
  (libraries simpl.interp))

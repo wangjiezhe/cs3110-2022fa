@@ -593,7 +593,7 @@ let not_empty lst =
   double : ('a -> 'a) -> 'a -> 'a
 *)
 
-(* Exercise: infer S [★★★★] *)
+(* Exercise: infer S (subst) [★★★★] *)
 (*
   let s x y z = (x z) (y z)
   let s = fun x -> fun y -> fun z -> (x z) (y z)
