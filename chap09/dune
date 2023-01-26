@@ -7,3 +7,23 @@
  (name curry_howard)
  (modules curry_howard)
  (libraries simpl.interp))
+
+(library
+ (name churchNumeral)
+ (modules churchNumeral))
+
+(test
+ (name test_churchNumeral)
+ (modules test_churchNumeral)
+ (libraries ounit2 churchNumeral))
+
+(library
+ (name churchNumeral2)
+ (modules churchNumeral2)
+ ; (flags :standard -rectypes)
+ )
+
+(test
+ (name test_churchNumeral2)
+ (modules test_churchNumeral2)
+ (libraries ounit2 churchNumeral2))
